@@ -6,6 +6,7 @@
 # Packages
 *.egg
 *.egg-info
+env
 dist
 build
 eggs
@@ -33,3 +34,4 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+*.sublime-*
