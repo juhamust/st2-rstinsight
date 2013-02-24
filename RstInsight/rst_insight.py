@@ -5,14 +5,20 @@ import sys
 from docutils import core, nodes, writers
 from docutils.parsers.rst import roles
 
-import sublime
-import sublime_plugin
+try:
+  import sublime
+  from sublime_plugin import TextCommand, EventListener
+
+# Only for testing purposes
+except ImportError:
+  sublime = None
+  TextCommand = EventListener = object
 
 
 visitor = []
 
 
-class RstInsightCommand(sublime_plugin.TextCommand):
+class RstInsightCommand(TextCommand):
 
   def run(self, edit):
     # Read all the files/views
@@ -56,7 +62,7 @@ class RstInsightCommand(sublime_plugin.TextCommand):
     return True
 
 
-class RstListener(sublime_plugin.EventListener):
+class RstListener(EventListener):
   """Listens for saved files and updates cache"""
 
   def on_post_save(self, view):
@@ -137,3 +143,15 @@ def register_sphinx_support():
   def dummy_role(typ, rawtext, text, lineno, inliner, options={}, content=[]):
     return [], []
 
+
+def test():
+  register_sphinx_support()
+  writer = MyWriter()
+  fname = os.path.join(os.path.dirname(__file__), '..', 'README.rst')
+  output = core.publish_file(source_path=fname, writer=writer)
+
+  print output
+
+
+if __name__ == '__main__':
+  test()
